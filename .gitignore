@@ -2,3 +2,4 @@
 # Use requirements.txt for dependencies
 /.venvATS
 /.idea
+*.pyc
