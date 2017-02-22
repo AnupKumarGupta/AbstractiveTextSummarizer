@@ -1,3 +1,4 @@
 # Virtual Environment 
 # Use requirements.txt for dependencies
 /.venvATS
+/.idea
