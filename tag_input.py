@@ -91,20 +91,47 @@ class tag_data(object):
 
         tagged_sentences =''
         for i in xrange(len(valid_stopmarks) - 1):
-            sentence = para[valid_stopmarks[i]:valid_stopmarks[i + 1]].split()
-            str =  ' '.join(sentence)
-            tagged_sentences += ' <s> '+str+' </s>'
+            sentence = para[valid_stopmarks[i]:valid_stopmarks[i + 1]]
+            tagged_sentences += ' <s> '+sentence+' </s>'
         return (tagged_sentences)
 
-    def tag_paragraphs(self,input_str):
-        tagged_article =''
+
+    """
+    Usage
+    =====
+    Break up given collection of paragraphs into individual paragraphs
+    and get them tagged.
+
+    Parameters
+    ==========
+    input_str: A chunk of text, containing several paragraphs,
+               which are separated by new line.
+    input_str_type: describes type of document, article or abstract.
+
+    Example
+    =======
+    >>>tag_paragraphs("This is first paragraph. It has two sentences.\nThis is a new paragraph.", "abstract")
+    abstract= <d> <p> <s> This is first paragraph. </s> <s>  It has two sentences. </s> </p> <p> <s> This is a new paragraph. </s> </p> </d>
+
+    """
+    def tag_paragraphs(self,input_str, input_str_type):
+        tagged_article = input_str_type + '= <d>'
         paragraph_list = input_str.split('\n')
         for paragraph in (paragraph_list):
             tagged_article += ' <p>'+self.tag_sentences(paragraph)+' </p>'
+        tagged_article +=' </d>'
         return tagged_article
 
-    def tag_input(self,input_str,input_str_type):
-        return input_str_type + '= <d>' + self.tag_paragraphs(input_str) + ' </d>'
 
-    def tag_input_data(self,input_str_article ,input_str_abstract):
-        print(self.tag_input(input_str_article,'article')+'\t'+ self.tag_input(input_str_abstract,'abstract'))
+    """
+    Usage: An article or an abstract is referred to as a document.
+    It tags both, an article and its asssociated abstract.
+
+    Parameters:
+    ===========
+    input_str_article:A chunk of text to be summarized, containing several paragraphs, which are separated by new line.
+    input_str_abstract: Expected abstract of the article.
+
+    """
+    def tag_document(self, input_str_article, input_str_abstract):
+        return (self.tag_paragraphs(input_str_article, 'article') + '\t' + self.tag_paragraphs(input_str_abstract, 'abstract'))
