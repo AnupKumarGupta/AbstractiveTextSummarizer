@@ -45,7 +45,7 @@ class tag_data(object):
 
         for i in range(count_single_quote_ends):
             single_quote_end_index = para.index("' ", single_quote_end_index)
-            list_single_quote_end_index.append(single_quote_begin_index)
+            list_single_quote_end_index.append(single_quote_end_index)
 
         for i in zip(list_single_quote_begin_index, list_single_quote_end_index):
             x, y = i
