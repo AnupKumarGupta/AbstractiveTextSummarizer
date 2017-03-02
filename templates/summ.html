@@ -1,0 +1,138 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+      <title>Text Summariser</title>
+      <!-- CSS  -->
+      <link href="{{ url_for('static', filename='css/googleapis.fonts.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+   </head>
+   <body>
+      <nav class="light-blue lighten-1" role="navigation">
+         <div class="nav-wrapper">
+            <img id="logo-container" src="{{ url_for('static', filename='images/imageedit_12_6677550315.png') }}"/>
+         </div>
+         <a href="{{ url_for('home') }}" class="breadcrumb light-blue-text">Home</a>
+      </nav>
+      <div class="section no-pad-bot" id="index-banner">
+         <div class="container">
+            <br><br>
+            <h3 class="header center light-blue-text text-lighten-1">Text Summarizer</h3><br><br>
+            <div class="row center">
+               <form class="col s12" action="/result" method="post">
+                  <div class="row">
+                     <div class="input-field light-blue-text col l8 s12 m8 offset-m2 offset-l2">
+                        <textarea id="textarea_article" name="textarea_article" class="materialize-textarea border"></textarea>
+                        <label for="textarea light-blue-text text-lighten-1">Enter your text here</label>
+                     </div>
+                     <div class="input-field light-blue-text col l8 s12 m8 offset-m2 offset-l2">
+                        <textarea id="textarea_abstract" name="textarea_abstract" class="materialize-textarea border">{{abstract}}</textarea>
+                        <label for="textarea light-blue-text text-lighten-1">Abstract of ur text</label>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <!-- Modal Trigger -->
+                     <input type="submit" value="Submit" class="btn waves-effect waves-light light-blue">
+                     <!--<a class="btn waves-effect waves-light light-blue" type="submit" name="action" value="submit">&lt;!&ndash; href="#modal1"&ndash;&gt;-->
+                        <!--Submit-->
+                        <!--<i class="material-icons right">style</i>-->
+                     </a>
+                  </div>
+               </form>
+            </div>
+            <br>
+            <br>
+         </div>
+      </div>
+      <!-- Modal Structure -->
+      <div id="modal1" class="modal">
+         <div class="modal-content">
+            <p>
+            <center>Please wait... Summarization in Progress...</center>
+            </p>
+            <div class="row center">
+               <div class="preloader-wrapper small active">
+                  <div class="spinner-layer spinner-blue">
+                     <div class="circle-clipper left">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="gap-patch">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="circle-clipper right">
+                        <div class="circle"></div>
+                     </div>
+                  </div>
+                  <div class="spinner-layer spinner-red">
+                     <div class="circle-clipper left">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="gap-patch">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="circle-clipper right">
+                        <div class="circle"></div>
+                     </div>
+                  </div>
+                  <div class="spinner-layer spinner-yellow">
+                     <div class="circle-clipper left">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="gap-patch">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="circle-clipper right">
+                        <div class="circle"></div>
+                     </div>
+                  </div>
+                  <div class="spinner-layer spinner-green">
+                     <div class="circle-clipper left">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="gap-patch">
+                        <div class="circle"></div>
+                     </div>
+                     <div class="circle-clipper right">
+                        <div class="circle"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!--div class="modal-footer">
+            <a href="" class=" modal-action modal-close waves-effect waves-green btn-flat disabled">Display Progress</a>
+         </div-->
+      </div>
+      <footer class="page-footer light-blue">
+         <div class="container">
+            <div class="row">
+               <div class="col l12 s12">
+                  <h5 class="white-text">About US</h5>
+                  <p class="grey-text text-lighten-4">We are a team of college students working on this project. Follow us on github.</p>
+               </div>
+            </div>
+         </div>
+         <div class="footer-copyright">
+            <div class="container">
+               Made by <a class="white-text" href="http://silive.in"> AKG -SoftwareIncubator-</a>
+            </div>
+         </div>
+      </footer>
+      <!--  Scripts-->
+      <script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+      <script>
+         $(document).ready(function(){
+             // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+             $('.modal').modal();
+           });
+      </script>
+   </body>
+</html>
+
+

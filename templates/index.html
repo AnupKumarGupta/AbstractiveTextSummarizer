@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+      <title>Introduction</title>
+      <!-- CSS  -->
+      <link href="{{ url_for('static', filename='css/googleapis.fonts.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <!--CSS ends -->
+   </head>
+   <body>
+      <nav class="white" role="navigation">
+         <a class="navbar-left">
+            <img id="logo-container" src="{{ url_for('static', filename='images/imageedit_1_2044087924.png') }}"/>
+         </a>
+      </nav>
+      <div id="index-banner" class="parallax-container">
+         <div class="section no-pad-bot">
+            <div class="container">
+               <br><br>
+               <h1 class="header center light-blue-text text-lighten-2">Automatic Text Summarizer</h1>
+               <br>
+               <div class="row center">
+                  <h5 class="header col s12 light">Automaticaly sumarizes your long lengthy texts..</h5>
+               </div>
+               <div class="row center">
+                  <a href="{{ url_for('summ') }}" id="sendButton" class="btn waves-effect waves-light light-blue lighten-1">Try Now</a>
+               </div>
+               <br><br>
+            </div>
+         </div>
+         <div class="parallax"><img src="{{ url_for('static', filename='images/background1.jpg') }}" alt="Unsplashed background img 1"></div>
+      </div>
+      <div class="container">
+         <div class="section">
+            <!--   Icon Section   -->
+            <div class="row">
+               <div class="col s12 m4">
+                  <div class="icon-block">
+                     <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
+                     <h5 class="center">Speed up your work</h5>
+                     <p class="light">You have to submit abstract of your paper and you're busy ? We are here to summarize your papers accurately in no time.</p>
+                  </div>
+               </div>
+               <div class="col s12 m4">
+                  <div class="icon-block">
+                     <h2 class="center brown-text"><i class="material-icons">library_books</i></h2>
+                     <h5 class="center">Impress your friends</h5>
+                     <p class="light">Your friend is bragging about a novel, you haven't read yet ? We are here to give you the story in few lines.</p>
+                  </div>
+               </div>
+               <div class="col s12 m4">
+                  <div class="icon-block">
+                     <h2 class="center brown-text"><i class="material-icons">verified_user</i></h2>
+                     <h5 class="center">Stay Updated</h5>
+                     <p class="light">News and long articles are boring, aren't they ? Still want to be updated ? We are here to provide you shortened news, so you remain updated.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="parallax-container valign-wrapper">
+         <div class="section no-pad-bot">
+            <div class="container">
+               <div class="row center">
+                  <h5 class="header col s12 white-text">Still working, thriving to be the best!!!</h5>
+               </div>
+            </div>
+         </div>
+         <div class="parallax"><img src="{{ url_for('static', filename='images/background2.jpg') }}" alt="Unsplashed background img 2"></div>
+      </div>
+      <div class="container">
+         <div class="section">
+            <div class="row">
+               <div class="col s12 center">
+                  <h3><i class="mdi-content-send brown-text"></i></h3>
+                  <h4>Come code with us</h4>
+                  <p class="left-align light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque id nunc nec volutpat. Etiam pellentesque tristique arcu, non consequat magna fermentum ac. Cras ut ultricies eros. Maecenas eros justo, ullamcorper a sapien id, viverra ultrices eros. Morbi sem neque, posuere et pretium eget, bibendum sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget dignissim mauris, non tristique erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="parallax-container valign-wrapper">
+         <div class="section no-pad-bot">
+            <div class="container">
+               <div class="row center">
+                  <h5 class="header col s12 light"> 
+                    <i class="material-icons md-50"> favorite</i> 
+                    <br>Peace<br> 
+                    <i class="Medium material-icons"> keyboard</i>
+                  </h5>
+               </div>
+            </div>
+         </div>
+         <div class="parallax"><img src="{{ url_for('static', filename='images/background3.jpg') }}" alt="Unsplashed background img 3"></div>
+      </div>
+      <footer class="page-footer light-blue">
+         <div class="container">
+            <div class="row">
+               <div class="col l12 s12">
+                  <h5 class="white-text">About Us</h5>
+                  <p class="grey-text text-lighten-4">We are a team of college students working on this project. Follow us on github.</p>
+               </div>
+            </div>
+         </div>
+         <div class="footer-copyright">
+            <div class="container">
+               Made by <a class="white-text" href="http://silive.in"> AKG --SoftwareIncubator--</a>
+            </div>
+         </div>
+      </footer>
+      <!--  Scripts-->
+      <script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+   </body>
+</html>
+
+
