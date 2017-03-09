@@ -65,11 +65,11 @@ class tag_data(object):
         for i in fullstop:
             if (i == 1 or i == 2):
                 to_be_removed.append(i)
-            if (ord(para[i - 2]) == 32 and (ord(para[i - 1]) in range(65, 91) or ord(para[i - 1]) in range(97, 123))):
+            elif (ord(para[i - 2]) == 32 and (ord(para[i - 1]) in range(65, 91) or ord(para[i - 1]) in range(97, 123))):
                 to_be_removed.append(i)
-            if (ord(para[i - 3]) == 32 and ord(para[i - 2]) in range(65, 91) and ord(para[i - 1]) in range(97, 123)):
+            elif (ord(para[i - 3]) == 32 and ord(para[i - 2]) in range(65, 91) and ord(para[i - 1]) in range(97, 123)):
                 to_be_removed.append(i)
-            if (ord(para[i - 3]) == 32 and ord(para[i - 2]) == 111 and ord(para[i - 1]) == 110):
+            elif (ord(para[i - 3]) == 32 and ord(para[i - 2]) == 111 and ord(para[i - 1]) == 110):
                 to_be_removed.append(i)
 
         if ('etc.' in para):
@@ -129,7 +129,7 @@ class tag_data(object):
 
     Parameters:
     ===========
-    input_str_article:A chunk of text to be summarized, containing several paragraphs, which are separated by new line.
+    input_str_article:  A chunk of text to be summarized, containing several paragraphs, which are separated by new line.
     input_str_abstract: Expected abstract of the article.
 
     """
