@@ -44,7 +44,7 @@ def gen_vocab_file(sorted_vocab_dict):
             file_w.write(str(key) + " " + str(value)+'\n')
 
 
-def voccab_generator():
+def vocab_generator():
     print "Collecting files"
     file_list = get_files()
     print "Files collected"
@@ -57,4 +57,4 @@ def voccab_generator():
     gen_vocab_file(sorted_vocab_dict)
     print "Voccab file generated"
 
-voccab_generator()
+vocab_generator()
