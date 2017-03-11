@@ -16,7 +16,6 @@ import sys
 import tensorflow as tf
 from tensorflow.core.example import example_pb2
 
-
 """
 
 Flags
@@ -34,7 +33,6 @@ tf.app.flags.DEFINE_string('command', 'binary_to_text',
 
 tf.app.flags.DEFINE_string('in_file', '', 'path to file')
 tf.app.flags.DEFINE_string('out_file', '', 'path to file')
-
 
 """
 
@@ -56,29 +54,30 @@ Example
 
 """
 
+
 def _binary_to_text():
-  #open the input file in read-binary mode 
-  reader = open(FLAGS.in_file, 'rb')
+    # open the input file in read-binary mode
+    reader = open(FLAGS.in_file, 'rb')
 
-  #open the input file as write
-  writer = open(FLAGS.out_file, 'w')
+    # open the input file as write
+    writer = open(FLAGS.out_file, 'w')
 
-  while True:
-    len_bytes = reader.read(8)
-    if not len_bytes:
-      sys.stderr.write('File reading completed\n')
-      return
+    while True:
+        len_bytes = reader.read(8)
+        if not len_bytes:
+            sys.stderr.write('File reading completed\n')
+            return
 
-    #The result of 'struct.unpack' is a tuple, hence [0] is used
-    str_len = struct.unpack('q', len_bytes)[0]
-    tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
-    tf_example = example_pb2.Example.FromString(tf_example_str)
-    examples = []
-    for key in tf_example.features.feature:
-      examples.append('%s=%s' % (key, tf_example.features.feature[key].bytes_list.value[0]))
-    writer.write('%s\n' % '\t'.join(examples))
-  reader.close()
-  writer.close()
+        # The result of 'struct.unpack' is a tuple, hence [0] is used
+        str_len = struct.unpack('q', len_bytes)[0]
+        tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
+        tf_example = example_pb2.Example.FromString(tf_example_str)
+        examples = []
+        for key in tf_example.features.feature:
+            examples.append('%s=%s' % (key, tf_example.features.feature[key].bytes_list.value[0]))
+        writer.write('%s\n' % '\t'.join(examples))
+    reader.close()
+    writer.close()
 
 
 """
@@ -98,35 +97,35 @@ Example
 	--out_file data.bin
 """
 
+
 def _text_to_binary():
-  #open the input file in read mode
-  inputs = open(FLAGS.in_file, 'r').readlines()
-  
-  #open the input file in write-binary mode
-  writer = open(FLAGS.out_file, 'wb')
-  for inp in inputs:
-    tf_example = example_pb2.Example()
+    # open the input file in read mode
+    inputs = open(FLAGS.in_file, 'r').readlines()
 
-    #'article' and 'abstract' are separated by <tab>
-    for feature in inp.strip().split('\t'): 
-      (k, v) = feature.split('=')           
-      tf_example.features.feature[k].bytes_list.value.extend([v])
+    # open the input file in write-binary mode
+    writer = open(FLAGS.out_file, 'wb')
+    for inp in inputs:
+        tf_example = example_pb2.Example()
 
-    tf_example_str = tf_example.SerializeToString()
-    str_len = len(tf_example_str)
-    writer.write(struct.pack('q', str_len))
-    writer.write(struct.pack('%ds' % str_len, tf_example_str))
-  writer.close()
+        # 'article' and 'abstract' are separated by <tab>
+        for feature in inp.strip().split('\t'):
+            (k, v) = feature.split('=')
+            tf_example.features.feature[k].bytes_list.value.extend([v])
 
+        tf_example_str = tf_example.SerializeToString()
+        str_len = len(tf_example_str)
+        writer.write(struct.pack('q', str_len))
+        writer.write(struct.pack('%ds' % str_len, tf_example_str))
+    writer.close()
 
 
 def main(unused_argv):
-  assert FLAGS.command and FLAGS.in_file and FLAGS.out_file
-  if FLAGS.command == 'binary_to_text':
-    _binary_to_text()
-  elif FLAGS.command == 'text_to_binary':
-    _text_to_binary()
+    assert FLAGS.command and FLAGS.in_file and FLAGS.out_file
+    if FLAGS.command == 'binary_to_text':
+        _binary_to_text()
+    elif FLAGS.command == 'text_to_binary':
+        _text_to_binary()
 
 
 if __name__ == '__main__':
-  tf.app.run()
+    tf.app.run()

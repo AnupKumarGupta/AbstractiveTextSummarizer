@@ -15,13 +15,13 @@ def home():
 
 @app.route('/summ')
 def summ():
-   return render_template('summ.html')
+   return render_template('summarize.html')
 
 
 @app.route('/summarize', methods=['POST', 'GET'])
 def func():
     #article = request.form['textarea_article']
-    return render_template('summ.html')
+    return render_template('summarize.html')
 
 
 @app.route('/result', methods=['POST', 'GET'])
@@ -31,7 +31,7 @@ def functio():
         #
         # INSERT LOGIC HERE
         #
-        return render_template('summ.html', abstract=article)
+        return render_template('summarize.html', abstract=article)
     else:
         return "Not done"
 

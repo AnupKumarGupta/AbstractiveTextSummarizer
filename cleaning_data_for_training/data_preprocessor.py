@@ -16,6 +16,7 @@ def get_articles():
             file_location = os.path.join(root, name)
             article_file_list.append(file_location)
 
+
 def clean_text():
     for files in article_file_list:
         file_r = open(files, 'r')
@@ -31,9 +32,9 @@ def clean_text():
 def write_tarining_data_to_file(article_data, abstract_file_list_per_article):
     for abstract_file in abstract_file_list_per_article:
         file_abstract_r = open("../data/abstract/" + abstract_file, 'r')
-        abstract_data = file_abstract_r.read().strip()+"."
+        abstract_data = file_abstract_r.read().strip() + "."
         training_data = tag_input_data.tag_document(article_data, abstract_data)
-        file_w = open("../data/clean_data/" + file_abstract_r.name.split('/')[-1], 'w')
+        file_w = open("../data/tagged_data/" + file_abstract_r.name.split('/')[-1], 'w')
         file_w.write(training_data)
 
 
@@ -54,4 +55,4 @@ def preprocess_training_data(is_clean):
         write_tarining_data_to_file(article, abstract_file_list_per_article)
 
 
-preprocess_training_data(False)
+preprocess_training_data(True)
