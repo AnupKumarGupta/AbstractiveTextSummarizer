@@ -36,11 +36,39 @@ def sort_token_list(vocab_dict):
     return var
 
 
+def parse_numbers_with_char(str_data):
+    replace_dict =\
+    {
+        ".": "",
+        ",": "",
+        "-": "",
+        "/": "",
+        ":": "",
+        "(": "",
+        ")": "",
+        "st": "",
+        "nd": "",
+        "rd": "",
+        "th": "",
+        "s": ""
+    }
+    for key, value in replace_dict.iteritems():
+        str_data = str_data.replace(key,value)
+    return str_data
+
+def is_numeric(str_data):
+    parsed_data = parse_numbers_with_char(str_data)
+    if parsed_data.isnumeric() or parsed_data.strip() == '':
+        return True
+    else:
+        return False
+
+
 def gen_vocab_file(sorted_vocab_dict):
     file_w = open("data/vocab", 'w')
     i = 0
     for key, value in sorted_vocab_dict:
-        if not key.isnumeric():
+        if not is_numeric(key):
             file_w.write(str(key) + " " + str(value)+'\n')
 
 
