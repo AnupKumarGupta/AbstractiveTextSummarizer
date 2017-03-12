@@ -9,7 +9,7 @@ token_count_list = {}
 
 def get_files():
     file_list = []
-    for root, dirs, files in os.walk("data/article", topdown=False):
+    for root, dirs, files in os.walk("data/tagged_data", topdown=False):
         for name in files:
             file_location = os.path.join(root, name)
             file_list.append(file_location)
@@ -20,14 +20,15 @@ def get_text_from_files(file_list):
     text_data = ""
     for file_ in file_list:
         file_r = open(file_, 'r')
-        tree = ET.parse(file_r)
-        root = tree.getroot()
-        text_data += root[3].text
+        article = file_r.read().split('\t')[0].replace("article=", "")
+        text_data += article
     return text_data
 
 
 def tokenize_data(text_data):
     token_list = tokenizer.tokenize(text_data)
+    token_list.extend(['<UNK>', '<PAD>'])
+    # Adding Special Tokens { <UNK> :"UNKNOWN_TOKEN", <PAD> : "PAD_TOKEN"} to vocab
     return Counter(token_list)
 
 
@@ -50,7 +51,8 @@ def parse_numbers_with_char(str_data):
             "nd": "",
             "rd": "",
             "th": "",
-            "s": ""
+            "s": "",
+            "  ": ""  # For annoying "(800)  281-1184"
         }
     for key, value in replace_dict.iteritems():
         str_data = str_data.replace(key, value)
@@ -59,7 +61,7 @@ def parse_numbers_with_char(str_data):
 
 def is_numeric(str_data):
     parsed_data = parse_numbers_with_char(str_data)
-    if parsed_data.isnumeric() or parsed_data.strip() == '':
+    if parsed_data.strip() == '' or parsed_data.isdigit():  #isnumeric() replaced by isdigit()
         return True
     else:
         return False
@@ -67,10 +69,13 @@ def is_numeric(str_data):
 
 def gen_vocab_file(sorted_vocab_dict):
     file_w = open("data/vocab", 'w')
+    print "File Opened"
     i = 0
     for key, value in sorted_vocab_dict:
         if not is_numeric(key):
             file_w.write(str(key) + " " + str(value) + '\n')
+    file_w.close()
+    print "File Closed"
 
 
 def vocab_generator():
