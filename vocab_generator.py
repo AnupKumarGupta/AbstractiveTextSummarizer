@@ -37,24 +37,25 @@ def sort_token_list(vocab_dict):
 
 
 def parse_numbers_with_char(str_data):
-    replace_dict =\
-    {
-        ".": "",
-        ",": "",
-        "-": "",
-        "/": "",
-        ":": "",
-        "(": "",
-        ")": "",
-        "st": "",
-        "nd": "",
-        "rd": "",
-        "th": "",
-        "s": ""
-    }
+    replace_dict = \
+        {
+            ".": "",
+            ",": "",
+            "-": "",
+            "/": "",
+            ":": "",
+            "(": "",
+            ")": "",
+            "st": "",
+            "nd": "",
+            "rd": "",
+            "th": "",
+            "s": ""
+        }
     for key, value in replace_dict.iteritems():
-        str_data = str_data.replace(key,value)
+        str_data = str_data.replace(key, value)
     return str_data
+
 
 def is_numeric(str_data):
     parsed_data = parse_numbers_with_char(str_data)
@@ -69,7 +70,7 @@ def gen_vocab_file(sorted_vocab_dict):
     i = 0
     for key, value in sorted_vocab_dict:
         if not is_numeric(key):
-            file_w.write(str(key) + " " + str(value)+'\n')
+            file_w.write(str(key) + " " + str(value) + '\n')
 
 
 def vocab_generator():
@@ -83,6 +84,7 @@ def vocab_generator():
     sorted_vocab_dict = sort_token_list(vocab_dict)
     print "Tokenized pairs sorted basis of count"
     gen_vocab_file(sorted_vocab_dict)
-    print "Voccab file generated"
+    print "Vocab file generated"
+
 
 vocab_generator()
