@@ -1,9 +1,12 @@
-"""Beam search module.
+"""
+
+Beam search module.
 
 Beam search takes the top K results from the model, predicts the K results for
 each of the previous K result, getting K*K results. Pick the top K results from
 K*K results, and start over again until certain number of results are fully
 decoded.
+
 """
 
 import tensorflow as tf
