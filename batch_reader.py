@@ -1,8 +1,10 @@
 import Queue
+import time
 from collections import namedtuple
 from threading import Thread
 
 import numpy as np
+import tensorflow as tf
 
 ModelInput = namedtuple('ModelInput', 'enc_input, dec_input, target, enc_len, dec_len, origin_article,origin_abstract')
 
@@ -119,5 +121,49 @@ class Batcher(object):
         pass
 
     def _watch_threads(self):
-        pass
 
+        """
+            Watch the daemon input threads and restart if dead.
+            Collect all the alive threads and assign them to self._input_threads and
+            self._bucketing_threads
+
+            Information: Without daemon threads, we have to keep track of the threads, and tell them to exit, before our
+                         program can completely quit. By setting them as daemon threads, we can let them run and forget
+                         about them, and when our program quits, any daemon threads are killed automatically.
+
+                         bucketing_threads[-1].daemon = True
+
+                         http://stackoverflow.com/questions/190010/daemon-threads-explanation
+
+        """
+        while True:
+            time.sleep(60)
+            input_threads = []
+
+            for t in self._input_threads:
+                if t.is_alive():
+                    input_threads.append(t)
+                else:
+                    tf.logging.error('Input thread found dead.')
+                    # creating a new thread is any thread is found dead
+                    new_t = Thread(target=self._fill_input_queue)
+                    input_threads.append(new_t)
+                    input_threads[-1].daemon = True
+                    input_threads[-1].start()
+
+            self._input_threads = input_threads
+
+            bucketing_threads = []
+
+            for t in self._bucketing_threads:
+                if t.is_alive():
+                    bucketing_threads.append(t)
+                else:
+                    tf.logging.error('Bucketing thread found dead.')
+                    new_t = Thread(target=self._fill_bucket_input_queue)
+                    # creating a new thread is any thread is found dead
+                    bucketing_threads.append(new_t)
+                    bucketing_threads[-1].daemon = True
+                    bucketing_threads[-1].start()
+
+            self._bucketing_threads = bucketing_threads
