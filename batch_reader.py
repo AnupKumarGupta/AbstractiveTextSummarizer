@@ -1,6 +1,7 @@
 import Queue
 import time
 from collections import namedtuple
+from random import shuffle
 from threading import Thread
 
 import numpy as np
@@ -118,7 +119,25 @@ class Batcher(object):
         pass
 
     def _fill_bucket_input_queue(self):
-        pass
+        """
+        Fill bucketed batches into the bucket_input_queue.
+        """
+        while True:
+            inputs = []
+
+            for _ in xrange(self._hps.batch_size * BUCKET_CACHE_BATCH):
+                inputs.append(self._input_queue.get())
+
+            if self._bucketing:
+                inputs = sorted(inputs, key=lambda inp: inp.enc_len)
+
+            batches = []
+            for i in xrange(0, len(inputs), self._hps.batch_size):
+                batches.append(inputs[i:i + self._hps.batch_size])
+
+            shuffle(batches)
+            for b in batches:
+                self._bucket_input_queue.put(b)
 
     def _watch_threads(self):
 
