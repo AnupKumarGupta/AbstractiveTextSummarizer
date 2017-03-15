@@ -121,3 +121,50 @@ def get_words_from_ids(ids_list, vocab):
     """
     assert isinstance(ids_list, list), '%s  is not a list' % ids_list
     return [vocab.id_to_word(i) for i in ids_list]
+
+
+def paragraph_to_sentences(paragraph, include_token=True):
+    """
+    Takes tokens of a paragraph and returns list of sentences.
+
+    Args:
+      paragraph: string, text of paragraph
+      include_token: Whether include the sentence separation tokens result.
+
+    Returns:
+      List of sentence strings.
+    """
+    s_gen = snippet_generator(paragraph, SENTENCE_START, SENTENCE_END, include_token)
+    return [s for s in s_gen]
+
+
+def snippet_generator(text, start_tok, end_tok, inclusive=True):
+    """
+     Generates consecutive snippets between start and end tokens.
+
+    Args:
+      text: a string
+      start_tok: a string denoting the start of snippets
+      end_tok: a string denoting the end of snippets
+      inclusive: Whether include the tokens in the returned snippets.
+
+    Yields:
+      String snippets
+
+    Information:
+      Generator are iterators, but we can only iterate over them once. It's because they do not store all the
+      values in memory, they generate the values on the fly
+      Yield is a keyword that is used like return, except the function will return a generator.
+    """
+    cur = 0
+    while True:
+        try:
+            start_p = text.index(start_tok, cur)
+            end_p = text.index(end_tok, start_p + 1)
+            cur = end_p + len(end_tok)
+            if inclusive:
+                yield text[start_p:cur]
+            else:
+                yield text[start_p + len(start_tok):end_p]
+        except ValueError as e:
+            raise StopIteration('no more snippets in text: %s' % e)
