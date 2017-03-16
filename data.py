@@ -210,3 +210,7 @@ def snippet_generator(text, start_tok, end_tok, inclusive=True):
                 yield text[start_p + len(start_tok):end_p]
         except ValueError as e:
             raise StopIteration('no more snippets in text: %s' % e)
+
+
+def get_example_feature_text(example, key):
+    return example.features.feature[key].bytes_list.value[0]
