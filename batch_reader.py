@@ -7,6 +7,8 @@ from threading import Thread
 import numpy as np
 import tensorflow as tf
 
+import data
+
 ModelInput = namedtuple('ModelInput', 'enc_input, dec_input, target, enc_len, dec_len, origin_article,origin_abstract')
 
 BUCKET_CACHE_BATCH = 100
@@ -116,7 +118,71 @@ class Batcher(object):
                 origin_abstracts)
 
     def _fill_input_queue(self):
-        pass
+        """
+            Fill input queue with ModelInput.
+
+        """
+        start_id = self._vocab.WordToId(data.SENTENCE_START)
+        end_id = self._vocab.WordToId(data.SENTENCE_END)
+        pad_id = self._vocab.WordToId(data.PAD_TOKEN)
+        input_gen = self._text_generator(data.example_gen(self._data_path))
+        while True:
+            (article, abstract) = input_gen.next()
+            article_sentences = [sent.strip() for sent in data.paragraph_to_sentences(article, include_token=False)]
+            abstract_sentences = [sent.strip() for sent in data.paragraph_to_sentences(abstract, include_token=False)]
+
+            enc_inputs = []
+            dec_inputs = [start_id]
+
+            # Convert first N sentences to word IDs, stripping existing <s> and </s>.
+            for i in xrange(min(self._max_article_sentences, len(article_sentences))):
+                enc_inputs += data.get_ids_from_words(article_sentences[i], self._vocab)
+
+            for i in xrange(min(self._max_abstract_sentences, len(abstract_sentences))):
+                dec_inputs += data.get_ids_from_words(abstract_sentences[i], self._vocab)
+
+            # Filter out too-short input
+            if len(enc_inputs) < self._hps.min_input_len or len(dec_inputs) < self._hps.min_input_len:
+                tf.logging.warning('Drop an example - too short.\nenc:%d\ndec:%d',
+                                   len(enc_inputs), len(dec_inputs))
+                continue
+
+            # If we're not truncating input, throw out too-long input
+            if not self._truncate_input:
+                if len(enc_inputs) > self._hps.enc_timesteps or len(dec_inputs) > self._hps.dec_timesteps:
+                    tf.logging.warning('Drop an example - too long.\nenc:%d\ndec:%d',
+                                       len(enc_inputs), len(dec_inputs))
+                    continue
+
+            # If we are truncating input, do so if necessary
+            else:
+                if len(enc_inputs) > self._hps.enc_timesteps:
+                    enc_inputs = enc_inputs[:self._hps.enc_timesteps]
+                if len(dec_inputs) > self._hps.dec_timesteps:
+                    dec_inputs = dec_inputs[:self._hps.dec_timesteps]
+
+            # targets is dec_inputs without <s> at beginning, plus </s> at end
+            targets = dec_inputs[1:]
+            targets.append(end_id)
+
+            # Now len(enc_inputs) should be <= enc_timesteps, and
+            # len(targets) = len(dec_inputs) should be <= dec_timesteps
+
+            enc_input_len = len(enc_inputs)
+            dec_output_len = len(targets)
+
+            # Pad if necessary
+            while len(enc_inputs) < self._hps.enc_timesteps:
+                enc_inputs.append(pad_id)
+            while len(dec_inputs) < self._hps.dec_timesteps:
+                dec_inputs.append(end_id)
+            while len(targets) < self._hps.dec_timesteps:
+                targets.append(end_id)
+
+            element = ModelInput(enc_inputs, dec_inputs, targets, enc_input_len,
+                                 dec_output_len, ' '.join(article_sentences),
+                                 ' '.join(abstract_sentences))
+            self._input_queue.put(element)
 
     def _fill_bucket_input_queue(self):
         """
@@ -186,3 +252,37 @@ class Batcher(object):
                     bucketing_threads[-1].start()
 
             self._bucketing_threads = bucketing_threads
+
+    def _text_generator(self, example_gen):
+        """
+        Generates article and abstract text from tf.Example. Raises ValueError
+
+        Information: Retrieve the next item from the iterator by calling its next() method.
+                     If default is given, it is returned if the iterator is exhausted,
+                     otherwise StopIteration is raised.
+
+                     https://docs.python.org/2/library/functions.html#next
+
+        """
+        while True:
+            e = example_gen.next()
+            try:
+                article_text = self._get_example_feature_text(e, self._article_key)
+                abstract_text = self._get_example_feature_text(e, self._abstract_key)
+
+            except ValueError:
+                tf.logging.error('Failed to get article or abstract from example')
+                continue
+
+            yield (article_text, abstract_text)
+
+    def _get_example_feature_text(self, example, key):
+        """Extract text for a feature from td.Example.
+
+        Args:
+          ex: tf.Example.
+          key: key of the feature to be extracted.
+        Returns:
+          feature: a feature text extracted.
+        """
+        return example.features.feature[key].bytes_list.value[0]
