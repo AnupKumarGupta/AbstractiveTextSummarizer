@@ -1,8 +1,9 @@
 import glob
 import os
 import xml.etree.ElementTree as ET
-import tag_input
+
 import data_cleaner
+import tag_input
 
 article_file_list = []
 tag_input_data = tag_input.tag_data()
@@ -29,7 +30,7 @@ def clean_text():
         file_w.close()
 
 
-def write_tarining_data_to_file(article_data, abstract_file_list_per_article):
+def write_training_data_to_file(article_data, abstract_file_list_per_article):
     for abstract_file in abstract_file_list_per_article:
         file_abstract_r = open("../data/abstract/" + abstract_file, 'r')
         abstract_data = file_abstract_r.read().strip() + "."
@@ -52,7 +53,7 @@ def preprocess_training_data(is_clean):
         text_id = root[0].text
         article = root[3].text
         abstract_file_list_per_article = (glob.glob1("../data/abstract/", '*' + text_id.strip() + '*'))
-        write_tarining_data_to_file(article, abstract_file_list_per_article)
+        write_training_data_to_file(article, abstract_file_list_per_article)
 
 
 preprocess_training_data(True)
