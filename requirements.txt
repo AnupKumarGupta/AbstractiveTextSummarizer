@@ -14,6 +14,6 @@ ptyprocess==0.5
 pyparsing==2.1.10
 simplegeneric==0.8.1
 six==1.10.0
-tensorflow==1.15.4
+tensorflow==2.6.4
 unity-lens-photos==1.0
 virtualenv==15.1.0
